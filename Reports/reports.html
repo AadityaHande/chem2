@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chemical Tracker Reports</title>
+  <link rel="stylesheet" href="reports.css">
+</head>
+<body onload="generateReport();">
+  <header>
+    <h1>Chemical Tracker - Reports</h1>
+    <nav>
+      <a href="../FrontPage/FrontPage.html"><button>Dashboard</button></a>
+      <button onclick="logout()" id="logoutBtn">Logout</button>
+    </nav>
+  </header>
+  <main>
+    <div class="report-controls">
+      <label for="filterUnit">Filter by Unit:</label>
+      <select id="filterUnit" onchange="filterByUnit()">
+        <option value="all">All</option>
+        <option value="ml">ml</option>
+        <option value="litre">litre</option>
+        <option value="g">g</option>
+        <option value="kg">kg</option>
+      </select>
+    </div>
+    <table id="reportTable">
+      <thead>
+        <tr>
+          <th>Chemical Name</th>
+          <th>Quantity</th>
+          <th>Unit</th>
+          <th>Last Updated</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </main>
+  <script type="module" src="reports.js"></script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+/* reports.css */
+
+/* Basic Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f8f9fa;
+  color: #333;
+  padding: 1rem;
+}
+
+/* Header and Navigation */
+header {
+  background: #343a40;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+}
+
+header nav {
+  margin-top: 1rem;
+}
+
+header nav a, header nav button {
+  background: #6c757d;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin: 0.3rem;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+/* Report Controls */
+.report-controls {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.report-controls select {
+  padding: 0.4rem;
+}
+
+/* Report Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 0.6rem;
+  text-align: left;
+}
+
+table th {
+  background: #e9ecef;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+  table tr {
+    margin-bottom: 1rem;
+  }
+  table th, table td {
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+  }
+  table th::before, table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 45%;
+    padding-left: 0.5rem;
+    font-weight: bold;
+    text-align: left;
+  }
+}

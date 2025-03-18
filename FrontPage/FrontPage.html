@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chemical Tracker</title>
+  <!-- You can link a shared style.css here or use FP.css specifically -->
+  <link rel="stylesheet" href="FP.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">Chemical Tracker</div>
+    <div class="user-info">
+      <img id="userAvatar" src="default-avatar.png" alt="User Avatar">
+      <div class="user-details">
+        <p class="email" id="userEmail">Loading...</p>
+        <p class="role" id="userRole">Loading role...</p>
+      </div>
+    </div>
+    <button class="dark-mode-btn" onclick="toggleDarkMode()" aria-label="Toggle dark mode">Toggle</button>
+    <button class="logout-btn" onclick="logout()" aria-label="Logout">Logout</button>
+  </header>
+
+  <div class="container">
+    <input type="text" id="searchBar" class="search-bar" placeholder="Search chemicals..." onkeyup="searchChemicals()">
+    <div class="sort-options">
+      <label for="sort">Sort by:</label>
+      <select id="sort" onchange="sortChemicals()">
+        <option value="">-- Select --</option>
+        <option value="low-quantity">Low Quantity</option>
+        <option value="high-quantity">High Quantity</option>
+        <option value="latest-time">Last Updated</option>
+      </select>
+    </div>
+    <ul id="chemicalList" class="chemical-list"></ul>
+  </div>
+
+  <!-- Button visible only for users with edit privileges (admin/teacher) -->
+  <button id="addChemicalBtn" class="add-btn" onclick="addChemical()" style="display:none;">Add Chemical</button>
+
+  <!-- Optional Modal for future upgrade (currently shows details only) -->
+  <div id="chemicalModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()" aria-label="Close Modal">&times;</span>
+      <h2 id="modal-name"></h2>
+      <p id="modal-quantity"></p>
+      <p id="modal-time"></p>
+    </div>
+  </div>
+  
+  <!-- Import Firebase config and FP.js -->
+  <script type="module">
+    import { auth, db } from "../firebase/firebase-config.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+    import { 
+      searchChemicals,
+      sortChemicals,
+      displayChemicals,
+      addChemical,
+      editChemical,
+      addQuantity,
+      deleteChemical,
+      saveToLocalStorage,
+      loadFromLocalStorage,
+      toggleDarkMode,
+      closeModal
+    } from "./FP.js";
+
+    // Global flag to control editing permissions (set based on user role)
+    window.allowedToEdit = false;
+
+    // Authentication and role checking
+    function initAuth() {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          document.getElementById("userEmail").innerText = user.email;
+          // Set avatar if available
+          if (user.photoURL) {
+            document.getElementById("userAvatar").src = user.photoURL;
+          }
+          // Fetch user role from Firestore
+          const userRef = doc(db, "users", user.uid);
+          getDoc(userRef)
+            .then((docSnap) => {
+              let roleText = "User";
+              if (docSnap.exists()) {
+                const userData = docSnap.data();
+                // Use photoURL from userData if exists
+                if (userData.photoURL) {\n                  document.getElementById(\"userAvatar\").src = userData.photoURL;\n                }\n                if (userData.role === \"admin\") {\n                  window.allowedToEdit = true;\n                  roleText = \"Admin\";\n                } else if (userData.role === \"teacher\") {\n                  window.allowedToEdit = true;\n                  roleText = \"Teacher\";\n                } else {\n                  window.allowedToEdit = false;\n                }\n              }\n              document.getElementById(\"userRole\").innerText = roleText;\n              // Show Add Chemical button only if user can edit\n              document.getElementById(\"addChemicalBtn\").style.display = window.allowedToEdit ? \"block\" : \"none\";\n            })\n            .catch((error) => {\n              console.error(\"Error retrieving user data:\", error);\n            });\n        } else {\n          window.location.href = \"../Login/login.html\";\n        }\n      });\n    }\n\n    function logoutUser() {\n      signOut(auth)\n        .then(() => {\n          window.location.href = \"../Login/login.html\";\n        })\n        .catch((error) => {\n          console.error(\"Logout Error:\", error);\n        });\n    }\n\n    window.logout = logoutUser;\n\n    // Initialize on window load\n    window.onload = function() {\n      initAuth();\n      loadFromLocalStorage();\n      if (localStorage.getItem(\"theme\") === \"dark\") {\n        document.body.classList.add(\"dark-mode\");\n      }\n    };\n\n    // Expose FP.js functions for inline event handlers\n    window.searchChemicals = searchChemicals;\n    window.sortChemicals = sortChemicals;\n    window.addChemical = addChemical;\n    window.editChemical = editChemical;\n    window.addQuantity = addQuantity;\n    window.deleteChemical = deleteChemical;\n    window.toggleDarkMode = toggleDarkMode;\n    window.closeModal = closeModal;\n  </script>\n</body>\n</html>
