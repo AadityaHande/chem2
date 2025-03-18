@@ -17,6 +17,7 @@
       </div>
     </div>
     <button class="dark-mode-btn" onclick="toggleDarkMode()" aria-label="Toggle dark mode">Toggle</button>
+    <button id="reportsBtn" class="reports-btn" onclick="goToReports()" style="display: none;">Reports</button>
     <button class="logout-btn" onclick="logout()" aria-label="Logout">Logout</button>
   </header>
 
@@ -97,6 +98,12 @@
                 } else {
                   window.allowedToEdit = false;
                 }
+                if (userData.role === "admin") {
+  window.allowedToEdit = true;
+  roleText = "Admin";
+  document.getElementById("reportsBtn").style.display = "inline-block"; // 👈 SHOW REPORTS BUTTON
+}
+
               }
               document.getElementById("userRole").innerText = roleText;
               document.getElementById("addChemicalBtn").style.display = window.allowedToEdit ? "block" : "none";
