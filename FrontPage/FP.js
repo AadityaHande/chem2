@@ -13,15 +13,42 @@ function convertToBaseUnit(quantity, unit) {
   return quantity * (unitConversion[unit] || 1);
 }
 
-// --- Report Logging ---
-// Log every action (add/edit/delete/add quantity) to reports (stored in localStorage)
+// --- Report Logging with Timestamp & Google Sheets Integration ---
+// Log a report entry with timestamp; also send it to Google Sheets via a web app endpoint.
 function logReport(action, name, quantity, unit) {
-  let reports = JSON.parse(localStorage.getItem("chemicalReports")) || [];
-  reports.push({
-    action, name, quantity, unit,
+  const reportEntry = {
+    action,
+    name,
+    quantity,
+    unit,
     time: new Date().toISOString()
-  });
+  };
+  let reports = JSON.parse(localStorage.getItem("chemicalReports")) || [];
+  reports.push(reportEntry);
   localStorage.setItem("chemicalReports", JSON.stringify(reports));
+
+  // Send the log entry to Google Sheets via a Google Apps Script web app endpoint
+  sendReportToGoogleSheets(reportEntry);
+}
+
+function sendReportToGoogleSheets(reportEntry) {
+  // Replace with your deployed Google Apps Script Web App URL
+  const googleSheetsEndpoint = "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec";
+  
+  fetch(googleSheetsEndpoint, {
+    method: "POST",
+    mode: "no-cors", // 'no-cors' mode since Google Apps Script web apps may not send CORS headers by default
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(reportEntry)
+  })
+  .then(() => {
+    console.log("Report sent to Google Sheets.");
+  })
+  .catch((error) => {
+    console.error("Error sending report to Google Sheets:", error);
+  });
 }
 
 // Searches chemicals based on user input
