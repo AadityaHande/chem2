@@ -74,6 +74,7 @@
     function initAuth() {
       onAuthStateChanged(auth, (user) => {
         if (user) {
+          document.getElementById("userName").innerText = user.name;
           document.getElementById("userEmail").innerText = user.email;
           if (user.photoURL) {
             document.getElementById("userAvatar").src = user.photoURL;
