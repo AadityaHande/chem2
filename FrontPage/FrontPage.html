@@ -72,53 +72,41 @@
     // Global flag to control editing permissions (set based on user role)
     window.allowedToEdit = false;
 
-    function initAuth() {
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      document.getElementById("userEmail").innerText = user.email;
-      if (user.photoURL) {
-        document.getElementById("userAvatar").src = user.photoURL;
-      }
-      const userRef = doc(db, "users", user.uid);
-      getDoc(userRef).then((docSnap) => {
-        let roleText = "User";
-        if (docSnap.exists()) {
-          const userData = docSnap.data();
-          if (userData.name) {
-            document.getElementById("userName").innerText = userData.name;
-          } else if (user.displayName) {
-            document.getElementById("userName").innerText = user.displayName;
+    
+function initAuth() {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          document.getElementById("userName").innerText = user.name;
+          document.getElementById("userEmail").innerText = user.email;
+          if (user.photoURL) {
+            document.getElementById("userAvatar").src = user.photoURL;
           }
-          if (userData.photoURL) {
-            document.getElementById("userAvatar").src = userData.photoURL;
-          }
-          if (userData.role === "admin") {
-            window.allowedToEdit = true;
-            roleText = "Admin";
-            document.getElementById("reportsBtn").style.display = "inline-block";
-          } else if (userData.role === "teacher") {
-            window.allowedToEdit = true;
-            roleText = "Teacher";
-          } else {
-            window.allowedToEdit = false;
-          }
-
-          document.getElementById("userRole").innerText = roleText;
-        } else {
-          // Fallback if no Firestore doc exists
-          document.getElementById("userName").innerText = user.displayName || "User";
-        }
-      }).catch((error) => {
-        console.error("Error fetching user data:", error);
-      });
-
-    } else {
-      // Redirect to login if not signed in
-      window.location.href = "../login/login.html";
-    }
-  });
-    }
-
+          // Fetch user role from Firestore
+          const userRef = doc(db, "users", user.uid);
+          getDoc(userRef)
+            .then((docSnap) => {
+              let roleText = "User";
+              if (docSnap.exists()) {
+                const userData = docSnap.data();
+                if (userData.photoURL) {
+                  document.getElementById("userAvatar").src = userData.photoURL;
+                } else if (user.photoURL) {
+                  document.getElementById("userAvatar").src = user.photoURL;
+                }
+                if (userData.role === "admin") {
+                  window.allowedToEdit = true;
+                  roleText = "Admin";
+                } else if (userData.role === "teacher") {
+                  window.allowedToEdit = true;
+                  roleText = "Teacher";
+                } else {
+                  window.allowedToEdit = false;
+                }
+                if (userData.role === "admin") {
+  window.allowedToEdit = true;
+  roleText = "Admin";
+  document.getElementById("reportsBtn").style.display = "inline-block"; // 👈 SHOW REPORTS BUTTON
+}
               }
               document.getElementById("userRole").innerText = roleText;
               document.getElementById("addChemicalBtn").style.display = window.allowedToEdit ? "block" : "none";
