@@ -106,6 +106,6 @@ function refreshInsights() {
 }
 
 function logout() {
-  window.location.href = "../Login/login.html";
+  window.location.href = "../login/login.html";
       }
   
