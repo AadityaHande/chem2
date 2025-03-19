@@ -42,6 +42,13 @@ body {
   border-radius: 50%;
   border: 2px solid white;
 }
+.navbar .user-info i {
+  width: 40px;
+  font-size:1.5rem;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
 
 .navbar .user-details {
   text-align: right;
@@ -75,6 +82,8 @@ body {
 .container {
   margin-top: 20px;
 }
+
+
 
 .search-bar {
   width: 100%;
