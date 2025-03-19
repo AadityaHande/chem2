@@ -37,18 +37,12 @@ body {
   gap: 15px;
 }
 
-.navbar .user-info img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 2px solid white;
-}
+
 .navbar .user-info i {
   width: 40px;
-  font-size:1.5rem;
+  font-size:2.5rem;
   height: 40px;
   border-radius: 50%;
-  border: 2px solid white;
 }
 
 .navbar .user-details {
