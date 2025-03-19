@@ -85,11 +85,11 @@ table td {
 }
 
 table th {
-  background-color: #e9ecef;
+  background-color: #ffdddd;
 }
 
 .low-stock {
-  background-color: #ffdddd;
+  background-color: #ffffff;
   font-weight: bold;
 }
 
