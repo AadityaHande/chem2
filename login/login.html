@@ -39,7 +39,7 @@
           await setDoc(userRef, { role: "teacher" });
         }
 
-        // ✅ CORRECT REDIRECTION
+        // CORRECT REDIRECTION
         window.location.href = "../FrontPage/FrontPage.html";
       } catch (err) {
         alert("Login Failed: " + err.message);
@@ -61,7 +61,7 @@
           role: "teacher"
         }, { merge: true });
 
-        // ✅ CORRECT REDIRECTION
+        // CORRECT REDIRECTION
         window.location.href = "../FrontPage/FrontPage.html";
       } catch (err) {
         alert("Google Sign-In Failed: " + err.message);
